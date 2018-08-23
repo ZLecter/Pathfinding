@@ -46,9 +46,10 @@ class Node {
 	 * @param {number} y Y Position
 	 * @param {boolean} isWalkable
 	 */
-	constructor(x, y, isWalkable) {
+	constructor(x, y, id, isWalkable) {
 		this.x = x;
 		this.y = y;
+		this.ID = id;
 		this.isWalkable = isWalkable;
 
 		this.neighbors = new Array();

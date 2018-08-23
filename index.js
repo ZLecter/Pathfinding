@@ -1,3 +1,5 @@
+const DEBUGMODE = false;
+
 let board;
 let scaleX, scaleY;
 let player = {x: 0, y: 0};
@@ -5,19 +7,22 @@ let end = {x: 5, y: 5};
 
 function setup(){
 	createCanvas(800, 800);
-	board = new Board(10, 10);
+	board = new Board(3, 3);
 	scaleX = width/board.w;
 	scaleY = height/board.h;
-	// noLoop();
+	noLoop();
 	// frameRate(30);
 
 	for (let i = 0; i < board.w; i++) {
 		for (let j = 0; j < board.h; j++) {
-			board.node[i][j] = new Node(i, j, true);
+			board.node[i][j] = new Node(i, j, (i*board.h) + j, true);
 		}
 	}
-	board.node[1][1].isWalkable = false;
+	// board.node[1][1].isWalkable = false;
+	board.node[0][1].isWalkable = false;
+	board.node[1][2].isWalkable = false;
 
+	// Not necessary, really
 	for (let i = 0; i < board.w; i++) {
 		for (let j = 0; j < board.h; j++) {
 			let n = board.node[i][j];
@@ -40,21 +45,23 @@ function draw(){
 
 	// Draw player
 	fill(25, 125, 125);
-	ellipse(player.x * scaleX + scaleX/2, player.y * scaleY + scaleY/2, scaleX * 0.9);
+	ellipse(player.x * scaleX + scaleX/2, player.y * scaleY + scaleY/2, scaleX * 0.9, scaleY * 0.9);
 	// Draw End Point
-	fill(225, 0, 125);
-	ellipse(end.x * scaleX + scaleX/2, end.y * scaleY + scaleY/2, scaleX * 0.9);
+	// fill(225, 0, 125);
+	// ellipse(end.x * scaleX + scaleX/2, end.y * scaleY + scaleY/2, scaleX * 0.9);
 
 	// Debug for neighbors
-	let xpos = parseInt(mouseX/scaleX);
-	let ypos = parseInt(mouseY/scaleY);
-	if((xpos >= 0 && xpos < board.w) && (ypos >= 0 && ypos < board.h)){
-		fill(0,255,0, 128);
-		rect(xpos * scaleX, ypos * scaleY, scaleX, scaleY);
-		board.node[xpos][ypos].neighbors.forEach(n => {
-			fill(0,0, 255, 128);
-			rect(n.x * scaleX, n.y * scaleY, scaleX, scaleY);
-		});
+	if(DEBUGMODE){
+		let xpos = parseInt(mouseX/scaleX);
+		let ypos = parseInt(mouseY/scaleY);
+		if((xpos >= 0 && xpos < board.w) && (ypos >= 0 && ypos < board.h)){
+			fill(0,255,0, 128);
+			rect(xpos * scaleX, ypos * scaleY, scaleX, scaleY);
+			board.node[xpos][ypos].neighbors.forEach(n => {
+				fill(0,0, 255, 128);
+				rect(n.x * scaleX, n.y * scaleY, scaleX, scaleY);
+			});
+		}
 	}
 }
 
