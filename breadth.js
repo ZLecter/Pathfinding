@@ -1,31 +1,60 @@
-/**
- * @param {Board} board
- * @param {Node} start
- */
-function BreadthFirstSearch (board, start) {
-	let frontier = new Queue();
-	frontier.Enqueue(start);
+class Breadth{
 
-	let visited = new Array();
-	visited.push(0);
-	console.log(visited.length);
-	console.log("=================");
+	/**
+	 * @param {Board} board Actual grid
+	 * @param {Node} start Start node
+	 * @param {Node} end End node
+	 */
+	constructor(board, start, end) {
+		this.frontier = new Queue();
+		this.visited = new Array();
+		this.board = board;
+		this.start = start;
+		this.end = end;
+	}
 
-	while (!frontier.isEmpty()) {
-		let currentNode = frontier.Dequeue();
-		console.log("Visiting node.ID: " + currentNode.ID);
-		// console.log("Frontier: ");
-		// console.log(frontier.items.length);
-		// console.log("Visited: ");
-		// console.log(visited.length);
-		// console.log("=================");
-		board.CalculateNeighbors(currentNode).forEach(next => {
-			if(!visited.includes(next.ID)){
-				frontier.Enqueue(next);
-				visited.push(next.ID);
-				// console.log("Inserted node.ID: " + next.ID);
-				// console.log("=================");
+	RedefineNodes(newStart, newEnd){
+		this.start = newStart;
+		this.end = newEnd;
+	}
+
+	FullSearch(earlyExit = true){
+		let reachable = false;
+		this.frontier = new Queue();
+		this.frontier.Enqueue(this.start);
+
+		this.visited = new Array();
+		this.visited.push(0);
+
+		// Actual algorithm
+		while (!this.frontier.isEmpty()) {
+			let currentNode = this.frontier.Dequeue();
+			currentNode.color = NodeColor.OnQueue;
+			if(currentNode.ID == this.end.ID){
+				console.log("Reached end node");
+				currentNode.color = NodeColor.Current;
+				if(earlyExit){
+					reachable = true;
+					break;
+				}
 			}
-		});
+			this.board.CalculateNeighbors(currentNode).forEach(next => {
+				if(!this.visited.includes(next.ID)){
+					this.frontier.Enqueue(next);
+					this.visited.push(next.ID);
+					next.color = NodeColor.Visited;
+				}
+			});
+		}
+		if(!reachable && earlyExit)
+			console.log("Non reachable end");
+		
+		// Clear arrays
+		this.frontier = new Queue();
+		this.visited = new Array();
+	}
+
+	ByStep(){
+		
 	}
 }

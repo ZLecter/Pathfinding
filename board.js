@@ -37,7 +37,46 @@ class Board {
 		});
 		return neighbors;
 	}
+
+	/**
+	 * @param {boolean} clearWalk Set all nodes to walkables?
+	 */
+	ClearNodes(clearWalk = false){
+		for(let i = 0; i < this.w; i++){
+			for(let j = 0; j < this.h; j++){
+				let n = this.node[i][j];
+				if(clearWalk) n.isWalkable = true;
+				n.color = (n.isWalkable) ? NodeColor.Walkable : NodeColor.NonWalkable
+			}
+		}
+	}
+
+	GenerateRandomNonWalkBlocks(numOfBlocks){
+		this.ClearNodes(true);
+		let i = 0;
+		while(i < numOfBlocks){
+			let rngx = Math.floor(Math.random() * this.w);
+			let rngy = Math.floor(Math.random() * this.h);
+			if(rngx != player.x || rngy != player.y){
+				if(rngx != end.x || rngy != end.y){
+					this.node[rngx][rngy].isWalkable = false;
+					this.node[rngx][rngy].color = NodeColor.NonWalkable;
+					i++;
+				}
+			}
+		}
+		console.log("Generated " + i + " nonwalkable blocks");
+	}
 }
+
+const NodeColor = {
+	Walkable: '#fff',
+	NonWalkable: '#000',
+	Visited: '#090',
+	OnQueue: '#009',
+	Current: '#d80a',
+	Neighbor: '#05fa'
+};
 
 class Node {
 	/**
@@ -53,7 +92,9 @@ class Node {
 		this.isWalkable = isWalkable;
 
 		this.neighbors = new Array();
+		this.color = color(255);
 	}
+
 }
 
 /**
